@@ -1,0 +1,146 @@
+# This is a basic configuration for the board
+# the config enable the 2 relay as alarm status and alarm trigger
+# and also expose the 6 inputs as binary sensor in home assistant
+#
+
+
+#create a new node and copy and paste the text below
+
+web_server:
+  port: 80
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO18
+      inverted: false
+      mode:
+        input: true
+        
+    name: Tamper
+    id: tamper
+    device_class: tamper
+
+  - platform: gpio
+    pin:
+      number: GPIO19
+      inverted: false
+      mode:
+        input: true
+        
+    name: Zone 1
+    id: zone_1
+    device_class: motion
+
+  - platform: gpio
+    pin:
+      number: GPIO23
+      inverted: false
+      mode:
+        input: true
+        
+    name: Zone 2
+    id: zone_2
+    device_class: motion
+
+
+  - platform: gpio
+    pin:
+      number: GPIO25
+      inverted: false
+      mode:
+        input: true
+        
+    name: Zone 3
+    id: zone_3
+    device_class: motion
+
+
+  - platform: gpio
+    pin:
+      number: GPIO26
+      inverted: false
+      mode:
+        input: true
+        
+    name: Zone 4
+    id: zone_4
+    device_class: motion
+
+
+  - platform: gpio
+    pin:
+      number: GPIO13
+      inverted: false
+      mode:
+        input: true
+        
+    name: Power Presence
+    id: ps_presence
+    device_class: problem
+
+switch:
+  - platform: gpio
+    pin: GPIO17
+    name: "SIREN"
+    id: rl_siren
+    restore_mode: ALWAYS_OFF
+    internal: true
+    inverted: true
+
+
+  - platform: gpio
+    pin: GPIO16
+    name: "RL_STATE"
+    id: rl_state
+    restore_mode: RESTORE_DEFAULT_OFF
+    internal: true
+    inverted: true
+
+
+
+
+
+
+
+
+
+
+alarm_control_panel:
+  - platform: template
+    name: Alarm System
+    arming_home_time: 0s
+    arming_away_time: 3s
+    pending_time: 5s
+    requires_code_to_arm: true
+    id: alrm
+    restore_mode: RESTORE_DEFAULT_DISARMED
+    codes:
+      - "1234"
+    binary_sensors:
+      - input: tamper
+      - input: zone_1
+      - input: zone_2
+      - input: zone_3
+      - input: zone_4
+    on_triggered:
+      then:
+        - switch.turn_on: rl_siren
+        
+    on_cleared:
+      then:
+        - switch.turn_off: rl_siren
+    
+    on_state:
+      then:
+        - if:
+            condition:
+             alarm_control_panel.is_armed: alrm
+            then:
+             
+             - switch.turn_on: rl_state
+                
+
+            else:
+             
+             - switch.turn_off: rl_state
