@@ -46,7 +46,7 @@ ota:
 # This should point to the public location of this yaml file.
 dashboard_import:
   package_import_url: github://cristiandc01/AlarmSystem32/project-alarmsystem-esp32.yaml@main
-  import_full_config: true
+  import_full_config: false
 
 wifi:
   # Set up a wifi access point using the device name above
