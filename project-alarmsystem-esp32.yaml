@@ -1,7 +1,7 @@
 # These substitutions allow the end user to override certain values
 substitutions:
-  devicename: alarmsystem
-  friendly_name: "alarmSystem 1.0"
+  devicename: alarmsystem32
+  friendly_name: "AlarmSystem32"
   in1_name: Tamper
   in2_name: Zone 1
   in3_name: Zone 2
@@ -9,7 +9,7 @@ substitutions:
   in5_name: Zone 4
   in6_name: PW_presence
   neopixel_led_pin: GPIO1
-  project_name: "DC Domotics.AlarmSystem32"
+  project_name: "dcdomotics.AlarmSystem32"
   project_version: "1.1.0"
 
 esphome:
