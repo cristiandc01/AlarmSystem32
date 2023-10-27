@@ -9,6 +9,8 @@ substitutions:
   in5_name: Zone 4
   in6_name: PW_presence
   neopixel_led_pin: GPIO1
+  project_name: "DC Domotics.AlarmSystem32"
+  project_version: "1.1.0"
 
 esphome:
   name: "${devicename}"
@@ -16,8 +18,9 @@ esphome:
   # so you can use a single firmware for all devices
   name_add_mac_suffix: true
   project:
-    name: "DC Domotics AlarmSystem32"
-    version: "1.0"
+    name: ${project_name}
+    version: ${project_version}
+
   # This will allow for (future) project identification,
   # configuration and updates.
 
