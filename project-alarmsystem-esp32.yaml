@@ -1,0 +1,347 @@
+# These substitutions allow the end user to override certain values
+substitutions:
+  devicename: alarmsystem
+  friendly_name: alarmSystem 1.0
+  in1_name: Tamper
+  in2_name: Zona 1
+  in3_name: Zona 2
+  in4_name: Zona 3
+  in5_name: Zona 4
+  in6_name: PW_presence
+  neopixel_led_pin: GPIO1
+
+esphome:
+  name: "${devicename}"
+  # Automatically add the mac address to the name
+  # so you can use a single firmware for all devices
+  name_add_mac_suffix: true
+
+  # This will allow for (future) project identification,
+  # configuration and updates.
+
+
+esp32:
+  board: esp32dev
+  framework:
+    type: arduino
+
+    # This will allow for (future) project identification,
+  # configuration and updates.
+ project:
+    name: esphome.project-template
+    version: "1.0"
+
+# To be able to get logs from the device via serial and api.
+logger:
+
+# API is a requirement of the dashboard import.
+api:
+
+# OTA is required for Over-the-Air updating
+ota:
+
+# This should point to the public location of this yaml file.
+dashboard_import:
+  package_import_url: github://dcdomotics/alarmsystem32/project-alarmsystem-esp32.yaml@main
+
+wifi:
+  # Set up a wifi access point using the device name above
+  ap:
+    ssid: "AlarmSystem"
+    password: "12345678"
+
+# In combination with the `ap` this allows the user
+# to provision wifi credentials to the device.
+captive_portal:
+
+##########################################################
+# Most projects should not remove anything from above here
+# and should just modify the name, project name/version 
+# and git url for the dashboard_import
+##########################################################
+
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+
+
+
+
+
+  
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: true
+  id: bus_a
+
+pn532_i2c:
+  id: pn532_board
+  on_tag:
+    then:
+       - light.turn_on:
+          id: NFC_LED
+          brightness: 100%
+          red: 100%
+          green: 60%
+          blue: 10%
+          flash_length: 1s
+        
+
+remote_receiver:
+  pin: GPIO27
+  dump: rc_switch
+  # Settings to optimize recognition of RF devices
+  tolerance: 50%
+  filter: 250us
+  idle: 4ms
+  buffer_size: 2kb
+
+
+
+#######################################
+#         INPUT BINARY SENSOR         #
+#######################################
+
+binary_sensor:
+  - platform: gpio
+    pin:
+      number: GPIO18
+      inverted: false
+      mode:
+        input: true
+        
+    name: $in1_name
+    id: tamper
+    device_class: tamper
+
+  - platform: gpio
+    pin:
+      number: GPIO19
+      inverted: false
+      mode:
+        input: true
+        
+    name: $in2_name
+    id: zone_1
+    device_class: motion
+
+  - platform: gpio
+    pin:
+      number: GPIO23
+      inverted: false
+      mode:
+        input: true
+        
+    name: $in3_name
+    id: zone_2
+    device_class: motion
+
+
+  - platform: gpio
+    pin:
+      number: GPIO25
+      inverted: false
+      mode:
+        input: true
+        
+    name: $in4_name
+    id: zone_3
+    device_class: motion
+
+
+  - platform: gpio
+    pin:
+      number: GPIO26
+      inverted: false
+      mode:
+        input: true
+        
+    name: $in5_name
+    id: zone_4
+    device_class: motion
+
+
+  - platform: gpio
+    pin:
+      number: GPIO13
+      inverted: false
+      mode:
+        input: true
+        
+    name: $in6_name
+    id: ps_presence
+    device_class: problem
+
+
+
+#######################################
+#   VIRTUAL BIN SENSOR FOR NFC KEY    #
+#######################################
+
+
+# - platform: pn532
+#   uid: 43-64-EB-1B
+#   id: tag1
+#   name: "PN532 NFC Tag"
+#   internal: false
+#   on_press:
+#     then:
+#       - delay: 1s
+#       - if:
+#           condition:
+#            alarm_control_panel.is_armed: alrm
+#           then:
+#             - alarm_control_panel.disarm:
+#                id: alrm
+#                code: "1234" 
+#           else:
+#            - alarm_control_panel.arm_away:
+#                id: alrm
+#                code: "1234" 
+
+
+#######################################
+#   VIRTUAL BIN SENSOR FOR RF KEY    #
+#######################################
+
+
+# - platform: remote_receiver
+#   name: "Remote Input"
+#   id: "rm_in1"
+#   rc_switch_raw:
+#     code: "0"
+#     protocol: "3"
+#   filters:
+#     - delayed_off: 200ms
+#     
+#
+#   on_press:
+#     then:
+#       - delay: 500ms
+#       - if:
+#           condition:
+#            alarm_control_panel.is_armed: alrm
+#           then:
+#             - alarm_control_panel.disarm:
+#                id: alrm
+#                code: "1234" 
+#           else:
+#            - alarm_control_panel.arm_away:
+#                id: alrm
+#                code: "1234" 
+#
+#######################################
+#            OUTPUT CONTROL           #
+#######################################
+
+
+switch:
+  - platform: gpio
+    pin: GPIO17
+    name: "SIREN"
+    id: rl_siren
+    restore_mode: ALWAYS_OFF
+    internal: true
+    inverted: true
+
+
+  - platform: gpio
+    pin: GPIO16
+    name: "RL_STATE"
+    id: rl_state
+    restore_mode: RESTORE_DEFAULT_OFF
+    internal: true
+    inverted: true
+
+
+
+
+
+
+#######################################
+#        ALARM PANEL COMPONENT        #
+#######################################
+
+
+
+alarm_control_panel:
+  - platform: template
+    name: Alarm System
+    arming_home_time: 0s
+    arming_away_time: 3s
+    pending_time: 5s
+    trigger_time: 5min
+    requires_code_to_arm: true
+    id: alrm
+    restore_mode: RESTORE_DEFAULT_DISARMED
+    codes:
+      - "1234"
+#######################################
+#LIST OF BINARY SENSOR OBSERVED BY ALARM COMPONENT
+    binary_sensors:
+      - input: tamper
+      - input: zone_1
+      - input: zone_2
+      - input: zone_3
+      - input: zone_4
+#     - input: rm_in1
+
+#######################################
+
+    on_triggered:
+      then:
+        - switch.turn_on: rl_siren
+        
+    on_cleared:
+      then:
+        - switch.turn_off: rl_siren
+    
+    on_state:
+      then:
+        - if:
+            condition:
+             alarm_control_panel.is_armed: alrm
+            then:
+             
+             - switch.turn_on: rl_state
+             - light.turn_on:
+                id: NFC_LED
+                brightness: 40%
+                red: 100%
+                green: 0%
+                blue: 0%
+                
+
+            else:
+             
+             - switch.turn_off: rl_state
+             - light.turn_on:
+                id: NFC_LED
+                brightness: 40%
+                red: 0%
+                green: 100%
+                blue: 0%
+
+
+
+#######################################
+#        NEOPIXEL LED CONFIG          #
+#######################################
+
+
+
+light:
+- platform: neopixelbus
+  variant: WS2812
+  pin: $neopixel_led_pin
+  num_leds: 1
+  flash_transition_length: 500ms
+  type: GRB
+  id: NFC_LED
+  name: "LED"
+  restore_mode: RESTORE_DEFAULT_ON
+  internal: true
