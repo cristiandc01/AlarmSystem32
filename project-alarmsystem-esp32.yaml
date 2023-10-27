@@ -1,7 +1,7 @@
 # These substitutions allow the end user to override certain values
 substitutions:
   devicename: alarmsystem
-  friendly_name: alarmSystem 1.0
+  friendly_name: "alarmSystem 1.0"
   in1_name: Tamper
   in2_name: Zona 1
   in3_name: Zona 2
@@ -15,7 +15,9 @@ esphome:
   # Automatically add the mac address to the name
   # so you can use a single firmware for all devices
   name_add_mac_suffix: true
-
+  project:
+    name: dcdomotics.alarmsystem32
+    version: "1.0"
   # This will allow for (future) project identification,
   # configuration and updates.
 
@@ -27,9 +29,7 @@ esp32:
 
     # This will allow for (future) project identification,
   # configuration and updates.
- project:
-    name: esphome.project-template
-    version: "1.0"
+
 
 # To be able to get logs from the device via serial and api.
 logger:
@@ -42,7 +42,7 @@ ota:
 
 # This should point to the public location of this yaml file.
 dashboard_import:
-  package_import_url: github://dcdomotics/alarmsystem32/project-alarmsystem-esp32.yaml@main
+  package_import_url: github://cristianodc01/alarmsystem32/project-alarmsystem-esp32.yaml@main
 
 wifi:
   # Set up a wifi access point using the device name above
