@@ -1,6 +1,6 @@
 # These substitutions allow the end user to override certain values
 substitutions:
-  name: "alarmsystem32"
+  name: alarmsystem32
   friendly_name: "AlarmSystem32"
   in1_name: Tamper
   in2_name: Zone 1
@@ -13,8 +13,8 @@ substitutions:
   project_version: "1.1.0"
 
 esphome:
-  name: "${name}"
-  friendly_name: "${friendly_name}"
+  name: ${name}
+  friendly_name: ${friendly_name}
   # Automatically add the mac address to the name
   # so you can use a single firmware for all devices
   name_add_mac_suffix: false
