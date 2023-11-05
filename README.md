@@ -1,12 +1,13 @@
 # AlarmSystem32
-anti-theft central unit based on esp32 with ESPHome Firmware
+Anti-theft central unit based on esp32 with ESPHome Firmware
 
 ## PCB
 
 Fully Assembled PCB
 
-![full_board](https://github.com/cristiandc01/AlarmSystem32/blob/main/Images/full_board.jpeg)
 
+
+<img src="https://github.com/cristiandc01/AlarmSystem32/blob/main/Images/full_board.jpeg" width="600"/>
 
 ## Features
 
@@ -34,8 +35,8 @@ Many accessories can be added and configured to the system such as NFC readers, 
 
 Some Accessories created specifically for AlarmSystem:
 
-- NFC Access Controller
-- I2C Input expansion board
+- NFC Access Controller (https://github.com/cristiandc01/AlarmSystem32_NFC)
+- I2C Input expansion board (https://github.com/cristiandc01/AlarmSystem32_INPUT)
 - I2C Output expansion board
 - Siren conversion board to I2C bus
-- I2C Bus Extender Board
+- I2C Bus Extender Board (https://github.com/cristiandc01/AlarmSystem32_I2C_EX)
