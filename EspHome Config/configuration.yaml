@@ -38,7 +38,7 @@ logger:
 # API is a requirement of the dashboard import.
 api:
   encryption:
-    key: "8Fo+Jk1E5CS/K7Ly2QlKhK1OZnOumI1iumx2PvvIWCs="
+    key: ""  # GENERATE NEW KEY
 
 
 # OTA is required for Over-the-Air updating
